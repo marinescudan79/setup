@@ -17,7 +17,7 @@
         "bjyoungblood/bjy-profiler": "dev-master",
         "san/san-session-toolbar": "0.1.*",
         "zendframework/zendpdf": "~2.0",
-        "zf-commons/zfc-user": "dev-master",
-        "bjyoungblood/bjy-authorize": "1.4.*"
+        "zendframework/zftool": "dev-master",
+        "sensiolabs/security-checker": "~2.0"
     }
 }

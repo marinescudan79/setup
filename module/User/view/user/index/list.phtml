@@ -1,0 +1,44 @@
+<?php echo $this->flashMessenger()->render(); ?>
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+  Add User
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Add User</h4>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary ladda-button" data-style="expand-left" id="saveUser">
+            <span class="ladda-label">Save</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+
+    $('#saveUser').on('click', function (e) {
+        var l = Ladda.create(this);
+        l.start();
+        $.post( "/user/index/add", $( "#user-add-form" ).serialize(), function( data ) {
+            $( ".modal-body" ).html( data );
+            // $btn.button('reset');
+        }).always(function() { l.stop(); });
+    });
+
+    $('#myModal').on('show.bs.modal', function (e) {
+        $.get( "/user/index/add", function( data ) {
+            $( ".modal-body" ).html( data );
+        });
+    });
+</script>

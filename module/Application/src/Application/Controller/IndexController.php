@@ -11,11 +11,18 @@ namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+// use SensioLabs\Security\SecurityChecker;
 
 class IndexController extends AbstractActionController
 {
     public function indexAction()
     {
+        // $checker = new SecurityChecker();
+        // $alerts = $checker->check(getcwd().'/composer.lock');
+        // if (!empty($alerts)) {
+        //     \Zend\Debug\Debug::dump($alerts);
+        // }
+
         return new ViewModel();
     }
 }
