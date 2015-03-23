@@ -1,8 +1,55 @@
-<?php echo $this->flashMessenger()->render(); ?>
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-  Add User
-</button>
+<?php echo $this->flashMessages(); ?>
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading c-list">
+                    <span class="title">Contacts</span>
+                    <ul class="pull-right c-controls">
+                        <li><a href="#myModal" data-toggle="tooltip" data-target="#myModal" data-placement="top" title="Add Contact"><i class="glyphicon glyphicon-plus"></i></a></li>
+                        <li><a href="#" class="hide-search" data-command="toggle-search" data-toggle="tooltip" data-placement="top" title="Toggle Search"><i class="glyphicon glyphicon-search"></i></a></li>
+                    </ul>
+                </div>
+
+                <div class="row" style="display: none;">
+                    <div class="col-xs-12">
+                        <div class="input-group c-search">
+                            <input type="text" class="form-control" id="contact-list-search">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search text-muted"></span></button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <ul class="list-group" id="contact-list">
+                <?php foreach ($this->users as $user) { ?>
+                    <li class="list-group-item">
+                        <div class="col-xs-12 col-sm-2">
+                            <img src="data:image/png;base64,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" alt="<?php echo $user->FirstName . ', ' . $user->LastName; ?>" class="img-responsive img-circle" />
+                        </div>
+                        <div class="col-xs-12 col-sm-10">
+                            <span class="name"><?php echo $user->FirstName . ', ' . $user->LastName; ?></span><br/>
+                            <span class="glyphicon glyphicon-map-marker text-muted c-info" data-toggle="tooltip" title="5842 Hillcrest Rd"></span>
+                            <span class="visible-xs"> <span class="text-muted">5842 Hillcrest Rd</span><br/></span>
+                            <span class="glyphicon glyphicon-earphone text-muted c-info" data-toggle="tooltip" title="(870) 288-4149"></span>
+                            <span class="visible-xs"> <span class="text-muted">(870) 288-4149</span><br/></span>
+                            <span class="glyphicon glyphicon-envelope text-muted c-info" data-toggle="tooltip" title="<?php echo $user->Email; ?>"></span>
+                            <span class="visible-xs"> <span class="text-muted"><?php echo $user->Email; ?></span><br/></span>
+                            <span class="glyphicon glyphicon-barcode text-muted c-info" data-toggle="tooltip" title="<?php echo $user->RoleName; ?>"></span>
+                            <span class="visible-xs"> <span class="text-muted"><?php echo $user->RoleName; ?></span><br/></span>
+                        </div>
+                        <div class="clearfix"></div>
+                    </li>
+                    <?php } ?>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- JavaScrip Search Plugin -->
+    <script src="//rawgithub.com/stidges/jquery-searchable/master/dist/jquery.searchable-1.0.0.min.js"></script>
+
+
 
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
@@ -26,13 +73,52 @@
 </div>
 
 <script type="text/javascript">
+$(function () {
+
+    $('[data-toggle="tooltip"]').tooltip();
+
+    $('#fullscreen').on('click', function(event) {
+        event.preventDefault();
+        window.parent.location = "http://bootsnipp.com/iframe/4l0k2";
+    });
+    $('a[href="#myModal"]').on('click', function(event) {
+        event.preventDefault();
+        $('#myModal').modal('show');
+    })
+
+    $('[data-command="toggle-search"]').on('click', function(event) {
+        event.preventDefault();
+        $(this).toggleClass('hide-search');
+
+        if ($(this).hasClass('hide-search')) {
+            $('.c-search').closest('.row').slideUp(100);
+        }else{
+            $('.c-search').closest('.row').slideDown(100);
+        }
+    })
+
+    $('#contact-list').searchable({
+        searchField: '#contact-list-search',
+        selector: 'li',
+        childSelector: '.col-xs-12',
+        show: function( elem ) {
+            elem.slideDown(100);
+        },
+        hide: function( elem ) {
+            elem.slideUp( 100 );
+        }
+    })
+
 
     $('#saveUser').on('click', function (e) {
         var l = Ladda.create(this);
         l.start();
-        $.post( "/user/index/add", $( "#user-add-form" ).serialize(), function( data ) {
-            $( ".modal-body" ).html( data );
-            // $btn.button('reset');
+        $.post( "/user/index/add", $( "#user-add-form" ).serialize(), function( data, textStatus ) {
+            if(data =='reload') {
+                location.reload();
+            } else {
+                $( ".modal-body" ).html( data );
+            }
         }).always(function() { l.stop(); });
     });
 
@@ -41,4 +127,6 @@
             $( ".modal-body" ).html( data );
         });
     });
+
+});
 </script>

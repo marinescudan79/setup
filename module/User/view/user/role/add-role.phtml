@@ -1,0 +1,29 @@
+<?php echo $this->flashMessages(); ?>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+    <?php
+     $form->setAttribute('role', 'form');
+     $form->prepare();
+
+     echo $this->form()->openTag($form);
+     ?>
+            <?php echo $this->formHidden($form->get('csrf')); ?>
+
+            <div class="row">
+                <div class="col-xs-6 col-sm-6 col-md-6">
+                    <?php $classError = $this->FormElementErrors($form->get('RoleName')) ? 'has-error' : '';?>
+                    <div class="form-group <?php echo $classError;?>">
+                        <?php echo $this->formInput($form->get('RoleName')); ?>
+                    </div>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-6">
+                    <?php $classError = $this->FormElementErrors($form->get('RoleParentId')) ? 'has-error' : '';?>
+                    <div class="form-group <?php echo $classError;?>">
+                        <?php echo $this->formSelect($form->get('RoleParentId')); ?>
+                    </div>
+                </div>
+            </div>
+        <?php echo $this->form()->closeTag(); ?>
+    </div>
+</div>

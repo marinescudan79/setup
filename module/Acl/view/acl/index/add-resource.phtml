@@ -1,0 +1,55 @@
+<?php echo $this->flashMessages(); ?>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+    <?php
+     $form->setAttribute('role', 'form');
+     $form->prepare();
+
+     echo $this->form()->openTag($form);
+     ?>
+            <?php echo $this->formHidden($form->get('csrf')); ?>
+            <div class="row">
+                <div class="col-xs-4 col-sm-4 col-md-4">
+                    <?php $classError = $this->FormElementErrors($form->get('ResourceName')) ? 'has-error' : '';?>
+                    <div class="form-group <?php echo $classError;?>">
+                        <?php echo $this->formInput($form->get('ResourceName')); ?>
+                    </div>
+                </div>
+                <div class="col-xs-8 col-sm-8 col-md-8">
+                    <?php $classError = $this->FormElementErrors($form->get('ResourceEntry')) ? 'has-error' : '';?>
+                    <div class="form-group <?php echo $classError;?>">
+                        <?php echo $this->formInput($form->get('ResourceEntry')); ?>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-xs-4 col-sm-4 col-md-4">
+                    <?php $classError = $this->FormElementErrors($form->get('SortKey')) ? 'has-error' : '';?>
+                    <div class="form-group <?php echo $classError;?>">
+                        <?php echo $this->formInput($form->get('SortKey')); ?>
+                    </div>
+                </div>
+                <div class="col-xs-8 col-sm-8 col-md-8">
+                    <div class="row">
+                        <div class="col-sm-6 col-lg-6">
+                            <?php echo $this->formCheckbox($form->get('IsVisibleInMenu')); ?>
+                        </div>
+                        <div class="col-sm-6 col-lg-6">
+                            <?php echo $this->formCheckbox($form->get('IsExternalUrl')); ?>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        <?php echo $this->form()->closeTag(); ?>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("input.switch").bootstrapSwitch();
+    });
+
+</script>

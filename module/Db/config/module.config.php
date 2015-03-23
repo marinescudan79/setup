@@ -3,20 +3,6 @@ return array(
     'router' => array(
         'routes' => array(
             'db' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
-                'options' => array(
-                    'route'    => '/',
-                    'defaults' => array(
-                        'controller' => 'Db\Controller\Index',
-                        'action'     => 'index',
-                    ),
-                ),
-            ),
-            // The following is a route to simplify getting started creating
-            // new controllers and actions without needing to create a new
-            // module. Simply drop new controllers in, and you can access them
-            // using the path /application/:controller/:action
-            'db' => array(
                 'type'    => 'Literal',
                 'options' => array(
                     'route'    => '/db',
@@ -58,10 +44,15 @@ return array(
         ),
         'invokables' => array(
             'Db\Service\Invokable\AbstractTable' => 'Db\Service\Invokable\AbstractTable',
+            'Db\Service\Invokable\TableGateway' => 'Db\Service\Invokable\TableGateway',
         ),
         'aliases' => array(
-            'getTable' => 'Db\Service\Invokable\AbstractTable',
-            'adapter'  => 'Zend\Db\Adapter\Adapter',
+            'getAbstractTable' => 'Db\Service\Invokable\AbstractTable',
+            'getTable'         => 'Db\Service\Invokable\TableGateway',
+            'adapter'          => 'Zend\Db\Adapter\Adapter',
+        ),
+        'shared' => array(
+            'Db\Service\Invokable\AbstractTable' => false,
         ),
     ),
     'controllers' => array(

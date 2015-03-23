@@ -1,4 +1,5 @@
 <?php echo $this->flashMessages(); ?>
+
 <div class="panel panel-default">
     <div class="panel-body">
     <?php
@@ -8,20 +9,42 @@
      echo $this->form()->openTag($form);
      ?>
             <?php echo $this->formHidden($form->get('csrf')); ?>
-            <?php $classError = $this->FormElementErrors($form->get('FirstName')) ? 'has-error' : '';?>
-            <div class="form-group <?php echo $classError;?>">
-                <?php echo $this->formInput($form->get('FirstName')); ?>
+            <div class="row">
+                <div class="col-xs-6 col-sm-6 col-md-6">
+                    <?php $classError = $this->FormElementErrors($form->get('FirstName')) ? 'has-error' : '';?>
+                    <div class="form-group <?php echo $classError;?>">
+                        <?php echo $this->formInput($form->get('FirstName')); ?>
+                    </div>
+                </div>
+                <div class="col-xs-4 col-sm-4 col-md-4">
+                    <?php $classError = $this->FormElementErrors($form->get('LastName')) ? 'has-error' : '';?>
+                    <div class="form-group <?php echo $classError;?>">
+                        <?php echo $this->formInput($form->get('LastName')); ?>
+                    </div>
+                </div>
+                <div class="col-xs-2 col-sm-2 col-md-2">
+                    <?php $classError = $this->FormElementErrors($form->get('MiddleName')) ? 'has-error' : '';?>
+                    <div class="form-group <?php echo $classError;?>">
+                        <?php echo $this->formInput($form->get('MiddleName')); ?>
+                    </div>
+                </div>
             </div>
 
-            <?php $classError = $this->FormElementErrors($form->get('LastName')) ? 'has-error' : '';?>
-            <div class="form-group <?php echo $classError;?>">
-                <?php echo $this->formInput($form->get('LastName')); ?>
+            <div class="row">
+                <div class="col-xs-6 col-sm-6 col-md-6">
+                    <?php $classError = $this->FormElementErrors($form->get('UserName')) ? 'has-error' : '';?>
+                    <div class="form-group <?php echo $classError;?>">
+                        <?php echo $this->formInput($form->get('UserName')); ?>
+                    </div>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-6">
+                    <?php $classError = $this->FormElementErrors($form->get('Email')) ? 'has-error' : '';?>
+                    <div class="form-group <?php echo $classError;?>">
+                        <?php echo $this->formInput($form->get('Email')); ?>
+                    </div>
+                </div>
             </div>
 
-            <?php $classError = $this->FormElementErrors($form->get('Email')) ? 'has-error' : '';?>
-            <div class="form-group <?php echo $classError;?>">
-                <?php echo $this->formInput($form->get('Email')); ?>
-            </div>
 
             <div class="row">
                 <div class="col-xs-6 col-sm-6 col-md-6">
@@ -35,6 +58,18 @@
                     <div class="form-group <?php echo $classError;?>">
                         <?php echo $this->formInput($form->get('PasswordVerify')); ?>
                     </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-xs-6 col-sm-6 col-md-6">
+                    <?php $classError = $this->FormElementErrors($form->get('RoleId')) ? 'has-error' : '';?>
+                    <div class="form-group <?php echo $classError;?>">
+                        <?php echo $this->formSelect($form->get('RoleId')); ?>
+                    </div>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-6">
                 </div>
             </div>
         <?php echo $this->form()->closeTag(); ?>

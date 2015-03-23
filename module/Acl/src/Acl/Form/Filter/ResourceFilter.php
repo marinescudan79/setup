@@ -3,16 +3,16 @@
  * @Author: Dan Marinescu
  * @Date:   2015-03-21 03:10:57
  * @Last Modified by:   Dan Marinescu
- * @Last Modified time: 2015-03-21 18:42:30
+ * @Last Modified time: 2015-03-23 00:29:18
  */
 
-namespace User\Form\Filter;
+namespace Acl\Form\Filter;
 
  use Zend\InputFilter\InputFilter;
  use Zend\InputFilter\InputFilterAwareInterface;
  use Zend\InputFilter\InputFilterInterface;
 
-class UserFilter implements InputFilterAwareInterface
+class ResourceFilter implements InputFilterAwareInterface
 {
      protected $inputFilter;
 
@@ -27,7 +27,7 @@ class UserFilter implements InputFilterAwareInterface
              $inputFilter = new InputFilter();
 
              $inputFilter->add(array(
-                 'name'     => 'FirstName',
+                 'name'     => 'ResourceName',
                  'required' => true,
                  'filters'  => array(
                      array('name' => 'StripTags'),
@@ -46,7 +46,7 @@ class UserFilter implements InputFilterAwareInterface
              ));
 
              $inputFilter->add(array(
-                 'name'     => 'LastName',
+                 'name'     => 'ResourceEntry',
                  'required' => true,
                  'filters'  => array(
                      array('name' => 'StripTags'),
@@ -65,26 +65,7 @@ class UserFilter implements InputFilterAwareInterface
              ));
 
              $inputFilter->add(array(
-                 'name'     => 'UserName',
-                 'required' => true,
-                 'filters'  => array(
-                     array('name' => 'StripTags'),
-                     array('name' => 'StringTrim'),
-                 ),
-                 'validators' => array(
-                     array(
-                         'name'    => 'StringLength',
-                         'options' => array(
-                             'encoding' => 'UTF-8',
-                             'min'      => 1,
-                             'max'      => 100,
-                         ),
-                     ),
-                 ),
-             ));
-
-             $inputFilter->add(array(
-                 'name'     => 'MiddleName',
+                 'name'     => 'SortKey',
                  'required' => false,
                  'filters'  => array(
                      array('name' => 'StripTags'),
@@ -92,7 +73,7 @@ class UserFilter implements InputFilterAwareInterface
                  ),
                  'validators' => array(
                      array(
-                         'name'    => 'StringLength',
+                         'name'    => 'Int',
                          'options' => array(
                              'encoding' => 'UTF-8',
                              'min'      => 1,
@@ -103,59 +84,29 @@ class UserFilter implements InputFilterAwareInterface
              ));
 
              $inputFilter->add(array(
-                 'name'     => 'Password',
-                 'required' => true,
+                 'name'     => 'IsExternalUrl',
+                 'required' => false,
                  'filters'  => array(
                      array('name' => 'StripTags'),
                      array('name' => 'StringTrim'),
                  ),
                  'validators' => array(
                      array(
-                         'name'    => 'StringLength',
-                         'options' => array(
-                             'encoding' => 'UTF-8',
-                             'min'      => 8,
-                             'max'      => 100,
-                         ),
+                         'name'    => 'Int',
                      ),
                  ),
              ));
 
              $inputFilter->add(array(
-                 'name'     => 'PasswordVerify',
-                 'required' => true,
-                 'filters'  => array(
-                     array('name' => 'StripTags'),
-                     array('name' => 'StringTrim'),
-                 ),
-                'validators' => array(
-                    array(
-                        'name'    => 'Identical',
-                        'options' => array(
-                            'token' => 'Password',
-                        ),
-                    ),
-                     array(
-                         'name'    => 'StringLength',
-                         'options' => array(
-                             'encoding' => 'UTF-8',
-                             'min'      => 8,
-                             'max'      => 100,
-                         ),
-                     ),
-                 ),
-             ));
-
-             $inputFilter->add(array(
-                 'name'     => 'Email',
-                 'required' => true,
+                 'name'     => 'IsVisibleInMenu',
+                 'required' => false,
                  'filters'  => array(
                      array('name' => 'StripTags'),
                      array('name' => 'StringTrim'),
                  ),
                  'validators' => array(
                      array(
-                         'name'    => 'Zend\Validator\EmailAddress',
+                         'name'    => 'Int',
                      ),
                  ),
              ));

@@ -3,7 +3,7 @@
  * @Author: danmarinescu
  * @Date:   2015-01-10 02:41:08
  * @Last Modified by:   Dan Marinescu
- * @Last Modified time: 2015-03-21 13:31:11
+ * @Last Modified time: 2015-03-22 22:46:20
  */
 namespace Db\Service\Invokable;
 
@@ -69,12 +69,14 @@ class AbstractTable extends AbstractTableGateway implements ServiceLocatorAwareI
         }
     }
 
-    public function tableEnumToArray($table, $column)
+    public function tableEnumToArray($column)
     {
-        $sql = 'SHOW COLUMNS FROM '.$table.' WHERE field="'.$column.'"';
+        $sql = 'SHOW COLUMNS FROM '.$this->tableName.' WHERE field="'.$column.'"';
 
         $adapter = $this->getAdapter();
         $row = $adapter->query($sql, $adapter::QUERY_MODE_EXECUTE);
+
+        // \Zend\Debug\Debug::dump($sql);
 
         foreach ($row as $option) {
             preg_match("/^enum\(\'(.*)\'\)$/", $option->Type, $matches);
@@ -231,7 +233,7 @@ class AbstractTable extends AbstractTableGateway implements ServiceLocatorAwareI
         $dbData = $this->filterData($data);
 
         // setting the LastUpdatedByUserId and timestamp
-        $dbData['LastUpdatedByUserId'] = isset($identity['UserId']) ? $identity['UserId'] : 0;
+        $dbData['LastUpdatedByUserId'] = isset($identity->UserId) ? $identity->UserId : 0;
         $dbData['LastUpdatedTimestamp'] = date('Y-m-d H:i:s');
 
         return parent::update($dbData, $where);
@@ -253,7 +255,7 @@ class AbstractTable extends AbstractTableGateway implements ServiceLocatorAwareI
 
         // setting the CreatedByUserId and timestamp
         if (!isset($dbData['CreatedByUserId']) || empty($dbData['CreatedByUserId'])) {
-            $dbData['CreatedByUserId'] = (isset($identity['UserId']) ? $identity['UserId'] : (isset($data['CreatedByUserId']) ? $data['CreatedByUserId'] : 0));
+            $dbData['CreatedByUserId'] = (isset($identity->UserId) ? $identity->UserId : (isset($data['CreatedByUserId']) ? $data['CreatedByUserId'] : 0));
         }
         if (!isset($dbData['CreatedTimestamp']) || empty($dbData['CreatedTimestamp'])) {
             $dbData['CreatedTimestamp'] = date('Y-m-d H:i:s');
@@ -275,6 +277,35 @@ class AbstractTable extends AbstractTableGateway implements ServiceLocatorAwareI
         }
         return $array;
     }
+
+    public function fetchKeyValue($columns, $where = null)
+    {
+        /** @var \Iterator $results */
+        if ($this->select == null) {
+            $this->select = $this->newSelect();
+        }
+        $this->getSelect()->columns($columns, false);
+        if ($where !== null) {
+            $this->select->where($where);
+        }
+        $sql = $this->select->getSqlString($this->getAdapter()->getPlatform());
+        $sql = str_replace('"', '', $sql);
+        $results = $this->getAdapter()->query($sql, array(5));
+        $this->select = null;
+        if (!isset($columns[0])) {
+            $columns = array_keys($columns);
+        }
+        $resultArray = array();
+        foreach ($results as $row) {
+            $resultArray[$row->$columns[0]] = $row->$columns[1];
+        }
+
+        if (!empty($resultArray)) {
+            return $resultArray;
+        }
+        return false;
+    }
+
 
     public function fetchPaginated($paginator)
     {

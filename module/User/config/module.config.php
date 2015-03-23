@@ -2,13 +2,33 @@
 return array(
     'router' => array(
         'routes' => array(
-            'user' => array(
+            'login' => array(
                 'type' => 'Zend\Mvc\Router\Http\Literal',
                 'options' => array(
-                    'route'    => '/',
+                    'route'    => '/login',
                     'defaults' => array(
-                        'controller' => 'User\Controller\Index',
-                        'action'     => 'index',
+                        'controller' => 'User\Controller\Auth',
+                        'action'     => 'login',
+                    ),
+                ),
+            ),
+            'logout' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/logout',
+                    'defaults' => array(
+                        'controller' => 'User\Controller\Auth',
+                        'action'     => 'logout',
+                    ),
+                ),
+            ),
+            'authenticate' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/authenticate',
+                    'defaults' => array(
+                        'controller' => 'User\Controller\Auth',
+                        'action'     => 'authenticate',
                     ),
                 ),
             ),
@@ -48,11 +68,48 @@ return array(
             ),
         ),
     ),
+    'controllers' => array(
+        'invokables' => array(
+            'User\Controller\Role'  => 'User\Controller\RoleController',
+            'User\Controller\Index' => 'User\Controller\IndexController',
+            'User\Controller\Auth'  => 'User\Controller\AuthController'
+        ),
+    ),
+    'controller_plugins' => array(
+        'invokables' => array(
+            'getAuthService'    => 'User\Plugin\AuthServicePlugin',
+            'getSessionStorage' => 'User\Plugin\AuthStoragePlugin',
+            'getIdentity'       => 'User\Plugin\GetIdentityPlugin',
+            'hasIdentity'       => 'User\Plugin\HasIdentityPlugin',
+        )
+    ),
     'service_manager' => array(
+        'invokables' => array(
+            'AuthService'  => 'Zend\Authentication\AuthenticationService',
+            'UserService'  => 'User\Service\Invokable\UserService',
+            'RoleService'  => 'User\Service\Invokable\RoleService',
+            /*Validators*/
+            'UserExist'    => 'User\Service\Validator\UsernameExist',
+            'UserNotExist' => 'User\Service\Validator\UsernameNotExist',
+            'EmailExist'   => 'User\Service\Validator\EmailExist',
+        ),
+        'services' => array(
+            'PasswordService' => new \User\Service\PasswordService(),
+            'AuthStorage'     => new \User\Service\AuthStorage(),
+        ),
         'abstract_factories' => array(
         ),
-        'aliases' => array(
+        'factories' => array(
+            'Zend\Session\ManagerInterface' => 'Zend\Session\Service\SessionManagerFactory',
+            'Zend\Session\Config\ConfigInterface' => 'Zend\Session\Service\SessionConfigFactory',
         ),
+        'aliases' => array(
+            'Zend\Authentication\AuthenticationService' => 'AuthService'
+        ),
+    ),
+    'session_config' => array(
+        'cache_expire' => 6,
+        'cookie_lifetime' => 6,
     ),
     'translator' => array(
         'locale' => 'en_US',
@@ -62,11 +119,6 @@ return array(
                 'base_dir' => __DIR__ . '/../language',
                 'pattern'  => '%s.mo',
             ),
-        ),
-    ),
-    'controllers' => array(
-        'invokables' => array(
-            'User\Controller\Index' => 'User\Controller\IndexController'
         ),
     ),
     'view_manager' => array(

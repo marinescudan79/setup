@@ -12,6 +12,8 @@
 
         <!-- Le styles -->
         <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
+                        ->prependStylesheet($this->basePath('css/bootstrap-switch.min.css'))
+                        // ->prependStylesheet($this->basePath('css/highlight.css'))
                         ->prependStylesheet($this->basePath('css/ladda.css'))
                         ->prependStylesheet($this->basePath('css/style.css'))
                         ->prependStylesheet($this->basePath('css/bootstrap-theme.min.css'))
@@ -19,6 +21,9 @@
 
         <!-- Scripts -->
         <?php echo $this->headScript()
+            // ->prependFile($this->basePath('js/general.js'))
+            ->prependFile($this->basePath('js/bootstrap-switch.min.js'))
+            // ->prependFile($this->basePath('js/highlight.js'))
             ->prependFile($this->basePath('js/ladda.js'))
             ->prependFile($this->basePath('js/bootstrap.min.js'))
             ->prependFile($this->basePath('js/jquery.min.js'))
@@ -41,6 +46,16 @@
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
                         <li class="active"><a href="<?php echo $this->url('home') ?>"><?php echo $this->translate('Home') ?></a></li>
+                         <?php
+                             if (!is_null($this->identity())) {
+                                 $text = 'Logout ' . $this->escapeHtml($this->identity()->UserName);
+                                 $route = 'logout';
+                             } else {
+                                 $text = 'Login';
+                                 $route = 'login';
+                             }
+                         ?>
+                        <li><a href="<?php echo $this->url($route) ?>"><?php echo $this->translate($text) ?></a></li>
                     </ul>
                 </div>
             </div>

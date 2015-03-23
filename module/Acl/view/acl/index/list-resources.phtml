@@ -1,0 +1,117 @@
+<?php echo $this->flashMessages(); ?>
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading c-list">
+                    <span class="title">Application Resources</span>
+                    <ul class="pull-right c-controls">
+                        <li><a href="#myModal" data-toggle="tooltip" data-target="#myModal" data-placement="top" title="Add Resource"><i class="glyphicon glyphicon-plus"></i></a></li>
+                        <li><a href="#" class="hide-search" data-command="toggle-search" data-toggle="tooltip" data-placement="top" title="Toggle Search"><i class="glyphicon glyphicon-search"></i></a></li>
+                    </ul>
+                </div>
+
+                <div class="row" style="display: none;">
+                    <div class="col-xs-12">
+                        <div class="input-group c-search">
+                            <input type="text" class="form-control" id="contact-list-search">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search text-muted"></span></button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <ul class="list-group" id="contact-list">
+                <?php foreach ($this->resources as $resource) { ?>
+                    <li class="list-group-item">
+                        <div class="col-xs-12 col-sm-12">
+                            <span class="name"><?php echo $resource->ResourceName; ?></span>
+                        </div>
+                        <div class="clearfix"></div>
+                    </li>
+                    <?php } ?>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- JavaScrip Search Plugin -->
+    <script src="//rawgithub.com/stidges/jquery-searchable/master/dist/jquery.searchable-1.0.0.min.js"></script>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Add Resource</h4>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary ladda-button" data-style="expand-left" id="saveUser">
+            <span class="ladda-label">Save</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+
+    $('[data-toggle="tooltip"]').tooltip();
+
+    $('a[href="#myModal"]').on('click', function(event) {
+        event.preventDefault();
+        $('#myModal').modal('show');
+    })
+
+    $('[data-command="toggle-search"]').on('click', function(event) {
+        event.preventDefault();
+        $(this).toggleClass('hide-search');
+
+        if ($(this).hasClass('hide-search')) {
+            $('.c-search').closest('.row').slideUp(100);
+        }else{
+            $('.c-search').closest('.row').slideDown(100);
+        }
+    })
+
+    $('#contact-list').searchable({
+        searchField: '#contact-list-search',
+        selector: 'li',
+        childSelector: '.col-xs-12',
+        show: function( elem ) {
+            elem.slideDown(100);
+        },
+        hide: function( elem ) {
+            elem.slideUp( 100 );
+        }
+    })
+
+
+    $('#saveUser').on('click', function (e) {
+        var l = Ladda.create(this);
+        l.start();
+        $.post( "/secure/index/addResource", $( "#resource-add-form" ).serialize(), function( data, textStatus ) {
+            if(data =='reload') {
+                location.reload();
+            } else {
+                $( ".modal-body" ).html( data );
+            }
+        }).always(function() { l.stop(); });
+    });
+
+    $('#myModal').on('show.bs.modal', function (e) {
+        $.get( "/secure/index/addResource", function( data ) {
+            $( ".modal-body" ).html( data );
+        });
+    });
+
+});
+</script>

@@ -3,7 +3,7 @@
  * @Author: Dan Marinescu
  * @Date:   2015-03-21 02:52:33
  * @Last Modified by:   Dan Marinescu
- * @Last Modified time: 2015-03-21 14:13:43
+ * @Last Modified time: 2015-03-21 23:27:53
  */
 
 namespace User\Form;
@@ -40,6 +40,30 @@ class UserForm extends FormLayer
             ),
             'options' => array(
                 'label' => 'Last Name',
+            ),
+        ));
+
+        $this->add(array(
+            'name' => 'MiddleName',
+            'attributes' => array(
+                'type'  => 'text',
+                'class' => 'form-control input-sm',
+                'placeholder' => 'Middle',
+            ),
+            'options' => array(
+                'label' => 'Middle Name',
+            ),
+        ));
+
+        $this->add(array(
+            'name' => 'UserName',
+            'attributes' => array(
+                'type'  => 'text',
+                'class' => 'form-control input-sm',
+                'placeholder' => 'Username',
+            ),
+            'options' => array(
+                'label' => 'Username',
             ),
         ));
 
@@ -81,14 +105,19 @@ class UserForm extends FormLayer
             'options' => array(
                 'label' => 'Confirm Password',
             ),
-            // 'validators' => array(
-            //     array(
-            //         'name'    => 'Identical',
-            //         'options' => array(
-            //             'token' => 'Password',
-            //         ),
-            //     ),
-            // ),
+        ));
+
+        $this->add(array(
+            'name'       => 'RoleId',
+            'type'  => 'Zend\Form\Element\Select',
+            'attributes' => array(
+                'class' => 'form-control input-sm',
+                'required' => 'required',
+            ),
+            'options' => array(
+                'label' => 'User Role',
+                'empty_option' => '- Select Role -',
+            ),
         ));
 
         $this->add(array(

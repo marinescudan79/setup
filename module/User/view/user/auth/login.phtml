@@ -1,0 +1,32 @@
+<div class="container">
+    <div class="card card-container">
+<?php echo $this->flashMessages(); ?>
+        <!-- <img class="profile-img-card" src="//lh3.googleusercontent.com/-6V8xOA6M7BA/AAAAAAAAAAI/AAAAAAAAAAA/rzlHcD0KYwo/photo.jpg?sz=120" alt="" /> -->
+        <img id="profile-img" class="profile-img-card" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" />
+        <p id="profile-name" class="profile-name-card"></p>
+
+    <?php
+     $form->setAttribute('role', 'form');
+     $form->prepare();
+
+     echo $this->form()->openTag($form);
+     ?>
+     <?php echo $this->formHidden($form->get('csrf')); ?>
+        <!-- <form class="form-signin"> -->
+            <span id="reauth-email" class="reauth-email"></span>
+            <!-- <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus> -->
+            <!-- <input type="password" id="inputPassword" class="form-control" placeholder="Password" required> -->
+            <?php echo $this->formInput($form->get('UserName')); ?>
+            <?php echo $this->formInput($form->get('Password')); ?>
+            <div id="remember" class="checkbox">
+                <label>
+                    <?php echo $this->formCheckbox($form->get('rememberme')); ?> Remember me
+                </label>
+            </div>
+            <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Sign in</button>
+    <?php echo $this->form()->closeTag(); ?>
+        <a href="#" class="forgot-password">
+            Forgot the password?
+        </a>
+    </div><!-- /card-container -->
+</div>

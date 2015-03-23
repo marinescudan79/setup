@@ -57,13 +57,17 @@ return array(
             'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
             'Zend\Log\LoggerAbstractServiceFactory',
         ),
+        'invokables' => array(
+            'LoggerService' => 'Application\Utils\Service\LoggerService',
+        ),
         'aliases' => array(
             'translator' => 'MvcTranslator',
         ),
     ),
     'controller_plugins' => array(
         'invokables' => array(
-            'flashMessages'    => 'Application\Plugin\FlashMessagePlugin',
+            'flashMessages' => 'Application\Plugin\FlashMessagePlugin',
+            'getService'    => 'Application\Plugin\GetServicePlugin',
         )
     ),
     'translator' => array(
