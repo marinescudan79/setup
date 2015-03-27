@@ -36,8 +36,8 @@
                             <span class="visible-xs"> <span class="text-muted">(870) 288-4149</span><br/></span>
                             <span class="glyphicon glyphicon-envelope text-muted c-info" data-toggle="tooltip" title="<?php echo $user->Email; ?>"></span>
                             <span class="visible-xs"> <span class="text-muted"><?php echo $user->Email; ?></span><br/></span>
-                            <span class="glyphicon glyphicon-barcode text-muted c-info" data-toggle="tooltip" title="<?php echo $user->RoleName; ?>"></span>
-                            <span class="visible-xs"> <span class="text-muted"><?php echo $user->RoleName; ?></span><br/></span>
+                            <span class="glyphicon glyphicon-barcode text-muted c-info" data-toggle="tooltip" title="<?php //echo $user->RoleName; ?>"></span>
+                            <span class="visible-xs"> <span class="text-muted"><?php //echo $user->RoleName; ?></span><br/></span>
                         </div>
                         <div class="clearfix"></div>
                     </li>
@@ -77,10 +77,6 @@ $(function () {
 
     $('[data-toggle="tooltip"]').tooltip();
 
-    $('#fullscreen').on('click', function(event) {
-        event.preventDefault();
-        window.parent.location = "http://bootsnipp.com/iframe/4l0k2";
-    });
     $('a[href="#myModal"]').on('click', function(event) {
         event.preventDefault();
         $('#myModal').modal('show');

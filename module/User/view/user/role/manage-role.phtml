@@ -1,0 +1,138 @@
+<div class="row">
+    <div class="col-md-5">
+        <div class="dual-list list-left panel panel-primary">
+            <div class="panel-heading">Active Resources</div>
+            <div class="well text-right panel-body">
+                <div class="row">
+                    <div class="col-md-10">
+                        <div class="input-group">
+                            <span class="input-group-addon glyphicon glyphicon-search"></span>
+                            <input type="text" name="SearchDualList" class="form-control" placeholder="search" />
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="btn-group">
+                            <a class="btn btn-default selector" title="select all"><i class="glyphicon glyphicon-unchecked"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <ul class="list-group" id="active-resources">
+                <?php foreach ($roleResourceList as $module => $resources) {
+                    foreach ($resources as $privileges) {
+                        foreach ($privileges as $privilege) { ?>
+                            <li class="list-group-item" data="<?php echo $privilege;?>"><?php echo $privilege;?></li>
+                <?php   }
+                    }
+                } ?>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="list-arrows col-md-2 text-center">
+        <button class="btn btn-default btn-sm move-left">
+            <span class="glyphicon glyphicon-chevron-left"></span>
+        </button>
+
+        <button class="btn btn-default btn-sm move-right">
+            <span class="glyphicon glyphicon-chevron-right"></span>
+        </button>
+    </div>
+
+    <div class="col-md-5">
+
+        <div class="dual-list list-right panel panel-primary">
+            <div class="panel-heading">Inactive Resources</div>
+            <div class="well panel-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="btn-group">
+                            <a class="btn btn-default selector" title="select all"><i class="glyphicon glyphicon-unchecked"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="input-group">
+                            <input type="text" name="SearchDualList" class="form-control" placeholder="search" />
+                            <span class="input-group-addon glyphicon glyphicon-search"></span>
+                        </div>
+                    </div>
+                </div>
+                <ul class="list-group">
+                <?php foreach ($list as $module => $resources) {
+                    foreach ($resources as $privileges) {
+                        foreach ($privileges as $privilege) { ?>
+                            <li class="list-group-item" data="<?php echo $privilege;?>"><?php echo $privilege;?></li>
+                <?php   }
+                    }
+                } ?>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="text-right">
+        <button type="button" class="btn btn-primary ladda-button" data-style="expand-left" id="save">
+            <span class="ladda-label">Save</span>
+        </button>
+    </div>
+</div>
+
+    <script type="text/javascript">
+        $(function () {
+
+            $('#save').on('click', function(e){
+                $form = $('<form method="post"></form>');
+
+                $('#active-resources > li.list-group-item').each(function(key, value) {
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: 'resources[]',
+                        value: $(this).attr('data')
+                    }).appendTo($form);
+                });
+
+                $('body').append($form);
+                $form.submit()
+            });
+
+            $('body').on('click', '.list-group .list-group-item', function () {
+                $(this).toggleClass('active');
+            });
+            $('.list-arrows button').click(function () {
+                var $button = $(this), actives = '';
+                if ($button.hasClass('move-left')) {
+                    actives = $('.list-right ul li.active');
+                    actives.clone().appendTo('.list-left ul');
+                    actives.remove();
+                } else if ($button.hasClass('move-right')) {
+                    actives = $('.list-left ul li.active');
+                    actives.clone().appendTo('.list-right ul');
+                    actives.remove();
+                }
+            });
+            $('.dual-list .selector').click(function () {
+                var $checkBox = $(this);
+                if (!$checkBox.hasClass('selected')) {
+                    $checkBox.addClass('selected').closest('.well').find('ul li:not(.active)').addClass('active');
+                    $checkBox.children('i').removeClass('glyphicon-unchecked').addClass('glyphicon-check');
+                } else {
+                    $checkBox.removeClass('selected').closest('.well').find('ul li.active').removeClass('active');
+                    $checkBox.children('i').removeClass('glyphicon-check').addClass('glyphicon-unchecked');
+                }
+            });
+            $('[name="SearchDualList"]').keyup(function (e) {
+                var code = e.keyCode || e.which;
+                if (code == '9') return;
+                if (code == '27') $(this).val(null);
+                var $rows = $(this).closest('.dual-list').find('.list-group li');
+                var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+                $rows.show().filter(function () {
+                    var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+                    return !~text.indexOf(val);
+                }).hide();
+            });
+
+        });
+    </script>

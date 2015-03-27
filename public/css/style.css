@@ -249,3 +249,27 @@ ul.c-controls li a:hover {
 .forgot-password {
     color: rgb(104, 145, 162);
 }
+
+.dual-list .list-group {
+    margin-top: 8px;
+}
+
+.list-left li, .list-right li {
+    cursor: pointer;
+}
+
+li.list-group, li.active {
+    color:white;
+}
+
+div.well, div.panel-body {
+    margin-bottom:0px;
+}
+
+.list-arrows {
+    padding-top: 100px;
+}
+
+.list-arrows button {
+    margin-bottom: 20px;
+}

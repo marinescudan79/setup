@@ -3,7 +3,7 @@
  * @Author: Dan Marinescu
  * @Date:   2015-03-21 02:52:33
  * @Last Modified by:   Dan Marinescu
- * @Last Modified time: 2015-03-23 09:59:46
+ * @Last Modified time: 2015-03-23 11:43:00
  */
 
 namespace User\Form;
@@ -37,8 +37,8 @@ class RoleForm extends FormLayer
                 'class' => 'form-control input-sm',
             ),
             'options' => array(
-                'label' => 'User Parent Role',
-                'empty_option' => '- No Parent Role -',
+                'label' => 'Inherited Role',
+                'empty_option' => '- No Inherited Role -',
             ),
         ));
 

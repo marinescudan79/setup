@@ -2,7 +2,7 @@
 return array(
     'router' => array(
         'routes' => array(
-            'Acl' => array(
+            'acl' => array(
                 'type'    => 'Literal',
                 'options' => array(
                     'route'    => '/secure',
@@ -50,6 +50,7 @@ return array(
             'ResourceService' => 'Acl\Service\Invokable\ResourceService',
             /*Validators*/
             'ResourceExist'    => 'Acl\Validator\ResourceExist',
+            'AclService'    => 'Acl\Service\Invokable\AclService',
         ),
         'aliases' => array(
         ),
@@ -58,6 +59,7 @@ return array(
     ),
     'view_manager' => array(
         'template_map' => array(
+            // 'manage-resource-for-role' => __DIR__ . '/../view/resource/manage-resource.phtml',
         ),
         'template_path_stack' => array(
             __DIR__ . '/../view',

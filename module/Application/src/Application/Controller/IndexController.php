@@ -22,7 +22,8 @@ class IndexController extends AbstractActionController
         // if (!empty($alerts)) {
         //     \Zend\Debug\Debug::dump($alerts);
         // }
-
+        // $test = $this->getStorage('Acl');
+        // \Zend\Debug\Debug::dump($test);
         return new ViewModel();
     }
 }

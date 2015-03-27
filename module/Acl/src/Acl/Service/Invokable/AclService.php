@@ -3,7 +3,7 @@
  * @Author: Dan Marinescu
  * @Date:   2015-02-22 22:14:47
  * @Last Modified by:   Dan Marinescu
- * @Last Modified time: 2015-03-22 01:31:23
+ * @Last Modified time: 2015-03-28 01:31:26
  */
 
 namespace Acl\Service\Invokable;
@@ -24,20 +24,24 @@ class AclService extends AbstractService
 
     public function getAcl()
     {
-        return $acl;
+        return $this->acl;
     }
 
     public function createAcl($userId = false, $roleToCreate = false)
     {
         $acl = new Acl();
 
-        if (!$userId && !$roleToCreate) {
-            $role = 'Guest';
+        $identity = $this->getService('AuthService')->getIdentity();
+
+        if (empty($identity)) {
+            $roleName = 'Guest';
+        } else {
+            $roleName = $identity->RoleName;
         }
 
-        // $identity = $this->getService('AuthService')->getIdentity();
-        $roles = $this->getService('RolesProvider')->setRoles();
-        $resources = $this->getService('ResourceProvider')->getAllResources();
+
+        $roles = $this->getService('RoleService')->listRoles()->toArray();
+        $resources = $this->getService('ResourceService')->listResources()->toArray();
 
         foreach ($resources as $resource) {
             $res = $resource['IsExternalUrl'] == 1 ? $resource['ResourceEntry'] : $this->getRoute($resource['ResourceEntry']);
@@ -52,43 +56,63 @@ class AclService extends AbstractService
             }
         }
 
-        $personRoles = $this->getService('RolesProvider')->getAssignedRoles($roleToCreate);
+        $personRoles = $this->getService('RoleService')->getInerhitedRolesResources();
+        // \Zend\Debug\Debug::dump($personRoles);
+        // die;
 
-        foreach ($personRoles as $role) {
-            $resources = $this->getService('PrivilegesProvider')->setRolePrivilege($role);
-            if (empty($resources)) {
-                continue;
-            }
-            $this->getService('ResourceProvider')->setResources($resources);
-        }
-        if ($userId) {
-            $userResources = $this->getService('PrivilegesProvider')->setUserPrivilege($userId);
+        $mvcRequest     = new \Zend\Http\Request();
+        $mvcRouter      = $this->getServiceLocator()->get('router');
 
-            if (!empty($userResources)) {
-                foreach ($userResources as $resource) {
-                    $this->getService('ResourceProvider')->setResources($userResources, 'User');
+
+        if (!empty($personRoles)) {
+            foreach ($personRoles as $roleName => $modules) {
+                foreach ($modules as $module => $controllers) {
+                    foreach ($controllers as $controller => $uris) {
+                        foreach ($uris as $uri) {
+                            $mvcRequest->setUri($uri);
+                            $match = $mvcRouter->match($mvcRequest);
+                            $resource = strtolower($module).'/'.$match->getParams()['controller'];
+                            $acl->allow($roleName, $resource, $match->getParams()['action']);
+                        }
+                    }
+
                 }
+
             }
         }
 
+        // \Zend\Debug\Debug::dump($this->getService('RoleService')->getInheritedRoles());
+        // \Zend\Debug\Debug::dump($acl);
+        // die;
 
-        $resources = $this->getService('ResourceProvider')->getResources();
+        // if ($userId) {
+        //     $userResources = $this->getService('PrivilegesProvider')->setUserPrivilege($userId);
 
-        foreach ($resources as $resource => $privileges) {
+        //     if (!empty($userResources)) {
+        //         foreach ($userResources as $resource) {
+        //             $this->getService('ResourceProvider')->setResources($userResources, 'User');
+        //         }
+        //     }
+        // }
 
-            if (!isset($privileges['Privilege'])) {
-                $acl->allow($privileges['Role'], $resource, null);
-                continue;
-            }
 
-            foreach ($privileges['Privilege'] as $privilege => $type) {
-                if ($type == 'Allow') {
-                    $acl->allow($privileges['Role'], $resource, $privilege);
-                } else {
-                    $acl->deny($privileges['Role'], $resource, $privilege);
-                }
-            }
-        }
+        // $resources = $this->getService('ResourceProvider')->getResources();
+
+        // foreach ($resources as $resource => $privileges) {
+
+        //     if (!isset($privileges['Privilege'])) {
+        //         $acl->allow($privileges['Role'], $resource, null);
+        //         continue;
+        //     }
+
+        //     foreach ($privileges['Privilege'] as $privilege => $type) {
+        //         if ($type == 'Allow') {
+        //             $acl->allow($privileges['Role'], $resource, $privilege);
+        //         } else {
+        //             $acl->deny($privileges['Role'], $resource, $privilege);
+        //         }
+        //     }
+        // }
 
 
         // $rolePrivileges = $this->getService('PrivilegesProvider')->setRolePrivilege('Employee');
@@ -114,12 +138,18 @@ class AclService extends AbstractService
             // $navigation->setAcl($acl);
 
 
+
+        $this->getServiceLocator()->setAllowOverride(true);
+        $this->getServiceLocator()->setService('Zend\Permissions\Acl', $acl);
+        $this->getServiceLocator()->setAllowOverride(false);
+        \Zend\View\Helper\Navigation\AbstractHelper::setDefaultAcl($acl);
+        \Zend\View\Helper\Navigation\AbstractHelper::setDefaultRole($roleName);
         return $acl;
     }
 
-    private function getRoute($controller)
+    public function getRoute($controller)
     {
         $controller = explode('\\', $controller);
-        return strtolower($controller[0].'/'.$controller[2]);
+        return strtolower(strtolower($controller[0]).'/'.strtolower($controller[2]));
     }
 }

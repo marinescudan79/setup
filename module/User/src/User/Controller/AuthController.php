@@ -3,7 +3,7 @@
  * @Author: Dan Marinescu
  * @Date:   2015-03-22 01:49:35
  * @Last Modified by:   Dan Marinescu
- * @Last Modified time: 2015-03-22 22:39:31
+ * @Last Modified time: 2015-03-27 14:29:31
  */
 namespace User\Controller;
 
@@ -66,13 +66,17 @@ class AuthController extends AbstractActionController
                         $this->flashmessenger()->addSuccessMessage($message);
                     }
                     $redirect = 'home';
-                    //check if it has rememberMe :
-                    if ($request->getPost('rememberme') == 1) {
-                        $this->getSessionStorage()->setRememberMe(1);
-                        //set storage again
-                        $this->getAuthService()->setStorage($this->getSessionStorage());
-                    }
+                    $this->getSessionStorage()->setRememberMe($request->getPost('rememberme'));
+                    //set storage again
+                    $this->getAuthService()->setStorage($this->getSessionStorage());
                     $identity = $this->getAuthService()->getAdapter()->getResultRowObject(null, array('Password'));
+                    $identity->RoleName = $this->getService('RoleService')->getRoleName($identity->RoleId);
+                    $userSettings = $this->getService('UserService')->getUserSettings($identity->UserId);
+                    if ($userSettings) {
+                        foreach ($userSettings as $key => $value) {
+                            $identity->$value['SettingName'] = $value['SettingValue'];
+                        }
+                    }
                     // \Zend\Debug\Debug::dump($identity);
                     $this->getSessionStorage()->write($identity);
                     $this->getAuthService()->setStorage($this->getSessionStorage());

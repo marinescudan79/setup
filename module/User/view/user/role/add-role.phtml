@@ -1,4 +1,5 @@
-<?php echo $this->flashMessages(); ?>
+<?php echo $this->flashMessages();
+if ($this->identity()->RoleName == 'Admin') { ?>
 
 <div class="panel panel-default">
     <div class="panel-body">
@@ -27,3 +28,4 @@
         <?php echo $this->form()->closeTag(); ?>
     </div>
 </div>
+<?php } ?>

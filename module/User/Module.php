@@ -11,14 +11,13 @@ class Module implements AutoloaderProviderInterface
     public function onBootstrap(MvcEvent $e)
     {
         $eventManager = $e->getApplication()->getEventManager();
-        $manager = $e->getApplication()->getServiceManager()->get('Zend\Session\ManagerInterface');
+        $manager      = $e->getApplication()->getServiceManager()->get('Zend\Session\ManagerInterface');
+        // $manager->rememberMe($manager->getConfig()->getCookieLifetime());
     }
 
     public function addLoginOverlay(MvcEvent $event)
     {
         $viewModel = $event->getViewModel();
-
-        // \Zend\Debug\Debug::dump($event->getRequest()->getRequestUri());
 
         $uri = $event->getRequest()->getRequestUri();
         if ($uri != '/login') {

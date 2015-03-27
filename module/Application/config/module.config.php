@@ -59,6 +59,7 @@ return array(
         ),
         'invokables' => array(
             'LoggerService' => 'Application\Utils\Service\LoggerService',
+            'StorageService' => 'Application\Service\Invokable\StorageService',
         ),
         'aliases' => array(
             'translator' => 'MvcTranslator',
@@ -68,6 +69,7 @@ return array(
         'invokables' => array(
             'flashMessages' => 'Application\Plugin\FlashMessagePlugin',
             'getService'    => 'Application\Plugin\GetServicePlugin',
+            'getStorage'    => 'Application\Plugin\StorageServicePlugin',
         )
     ),
     'translator' => array(

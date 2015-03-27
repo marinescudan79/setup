@@ -92,6 +92,7 @@ return array(
             'UserExist'    => 'User\Service\Validator\UsernameExist',
             'UserNotExist' => 'User\Service\Validator\UsernameNotExist',
             'EmailExist'   => 'User\Service\Validator\EmailExist',
+            'RoleExist'    => 'User\Service\Validator\RoleExist',
         ),
         'services' => array(
             'PasswordService' => new \User\Service\PasswordService(),

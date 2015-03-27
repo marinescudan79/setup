@@ -3,12 +3,13 @@
  * @Author: Dan Marinescu
  * @Date:   2015-03-21 14:22:23
  * @Last Modified by:   Dan Marinescu
- * @Last Modified time: 2015-03-22 17:28:56
+ * @Last Modified time: 2015-03-26 13:29:35
  */
 
 namespace User\Service\Invokable;
 
 use Application\Utils\Service\AbstractService;
+use Zend\Db\Sql\Predicate\Literal;
 
 class UserService extends AbstractService
 {
@@ -31,7 +32,6 @@ class UserService extends AbstractService
             new \Zend\Db\Sql\Predicate\Expression("User.Status <> 'Deleted'")
         );
 
-
         return $this->getTable('User')->select()->where($where)->join($join)->fetchAll();
     }
 
@@ -42,5 +42,28 @@ class UserService extends AbstractService
         $data['ContactDetailId'] = $this->getTable('ContactDetail')->insert($data);
         $userId                  = $this->getTable('User')->insert($data);
         return $userId;
+    }
+
+    public function getUserSettings($userId)
+    {
+        $join = array(
+            array(
+                'table_name' => 'Setting',
+                'join_condition' => new Literal("UserSetting.SettingId = Setting.SettingId AND Setting.Status <> 'Deleted'"),
+                'columns' => array('SettingName'),
+            ),
+        );
+
+        $where = array(
+            'UserId' => $userId,
+            new Literal("UserSetting.Status <> 'Deleted'")
+        );
+
+        return $this->getTable('UserSetting')->select()->join($join)->where($where)->fetchAll()->toArray();
+    }
+
+    public function getUserResources()
+    {
+
     }
 }
