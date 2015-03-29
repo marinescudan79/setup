@@ -3,7 +3,7 @@
  * @Author: Dan Marinescu
  * @Date:   2015-03-23 00:30:13
  * @Last Modified by:   Dan Marinescu
- * @Last Modified time: 2015-03-28 00:29:31
+ * @Last Modified time: 2015-03-29 18:49:18
  */
 
 namespace Acl\Service\Invokable;
@@ -165,6 +165,7 @@ class ResourceService extends AbstractService
                         $priv = str_replace('-action', '', strtolower(preg_replace('/([a-zA-Z])(?=[A-Z])/', '$1-', $method->name)));
                         $routeMatchParams['controller'] = strtolower(end($parts));
                         $routeMatchParams['action']     = $priv;
+                        // \Zend\Debug\Debug::dump($routeMatchParams);
                         $options['name']                = strtolower($module).'/default';
                         $privileges[] = $mvcRouter->assemble($routeMatchParams, $options);
                     }

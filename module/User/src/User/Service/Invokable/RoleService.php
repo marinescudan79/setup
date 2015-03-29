@@ -3,7 +3,7 @@
  * @Author: Dan Marinescu
  * @Date:   2015-03-21 21:24:11
  * @Last Modified by:   Dan Marinescu
- * @Last Modified time: 2015-03-28 00:55:39
+ * @Last Modified time: 2015-03-29 18:25:53
  */
 
 namespace User\Service\Invokable;
@@ -79,34 +79,46 @@ class RoleService extends AbstractService
             new \Zend\Db\Sql\Predicate\Expression("Role.Status <> 'Deleted'")
         );
 
-        $roles = $this->getTable('Role')->select()->where($where)->order(array('RoleId' => 'DESC'))->fetchAll()->toArray();
+        $join = array(
+            array(
+                'table_name' => 'Role',
+                'join_condition' => 'Role.RoleParentId = RoleParent.RoleId',
+                'columns' => array('ParentUserRoleName' => 'RoleName'),
+                'join' => 'left',
+                'alias' => 'RoleParent'
+            ),
+        );
+
+        $roles = $this->getTable('Role')->select()->where($where)->join($join)->order(array('RoleId' => 'DESC'))->fetchAll()->toArray();
 
         if (!$this->getService('AuthService')->hasIdentity()) {
             $roleId = 'Guest';
         } else {
             $identity = $this->getService('AuthService')->getIdentity();
-            $roleId = $identity->RoleId;
+            $roleId = $identity->RoleName;
 
             if (isset($identity->IsSuperUser) && $identity->IsSuperUser == 1) {
                 $roleId = 'IsSuperUser';
             }
         }
 
+
         $this->extractInheritedRoles($roles, $roleId);
+        // \Zend\Debug\Debug::dump($roleId);
         return $this->inheritedRoles;
     }
 
-    private function extractInheritedRoles($roles, $roleId = false)
+    private function extractInheritedRoles($roles, $roleName = false)
     {
         foreach ($roles as $role) {
-            if ($roleId == 'IsSuperUser') {
+            if ($roleName == 'IsSuperUser') {
                 $this->inheritedRoles[$role['RoleId']] = $role['RoleName'];
                 continue;
             }
-            if ($role['RoleId'] == $roleId) {
-                $this->inheritedRoles[$roleId] = $role['RoleName'];
-                if (!empty($role['RoleParentId'])) {
-                    $this->extractInheritedRoles($roles, $role['RoleParentId']);
+            if ($role['RoleName'] == $roleName) {
+                $this->inheritedRoles[$role['RoleId']] = $role['RoleName'];
+                if (!empty($role['ParentUserRoleName'])) {
+                    $this->extractInheritedRoles($roles, $role['ParentUserRoleName']);
                 }
             }
         }
