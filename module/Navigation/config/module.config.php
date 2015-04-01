@@ -53,9 +53,21 @@ return array(
         ),
         'shared' => array(
         ),
+         'factories' => array(
+             'navigation' => 'Zend\Navigation\Service\DefaultNavigationFactory',
+         ),
     ),
     'navigation' => array(
-        'MenuNavigation' => array(),
+        'default' => array(
+             array(
+                 'label' => 'Home',
+                 'route' => 'home',
+             ),
+             array(
+                 'label' => 'Users',
+                 'route' => 'user/default',
+             ),
+         ),
     ),
     'view_manager' => array(
         'template_map' => array(

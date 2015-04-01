@@ -3,7 +3,7 @@
  * @Author: Dan Marinescu
  * @Date:   2015-02-22 22:14:47
  * @Last Modified by:   Dan Marinescu
- * @Last Modified time: 2015-03-29 18:25:56
+ * @Last Modified time: 2015-03-31 15:15:13
  */
 
 namespace Acl\Service\Invokable;
@@ -34,9 +34,9 @@ class AclService extends AbstractService
         $identity = $this->getService('AuthService')->getIdentity();
 
         if (empty($identity)) {
-            $roleName = 'Guest';
+            $roleNameUser = 'Guest';
         } else {
-            $roleName = $identity->RoleName;
+            $roleNameUser = $identity->RoleName;
         }
 
 
@@ -72,6 +72,7 @@ class AclService extends AbstractService
                             $mvcRequest->setUri($uri);
                             $match = $mvcRouter->match($mvcRequest);
                             $resource = strtolower($module).'/'.$match->getParams()['controller'];
+                            // \Zend\Debug\Debug::dump($resource .' - '. $match->getParams()['action']);
                             $acl->allow($roleName, $resource, $match->getParams()['action']);
                         }
                     }
@@ -135,15 +136,16 @@ class AclService extends AbstractService
         // $navigation = $this->getService('Zend\View\HelperPluginManager');
         // \Zend\Debug\Debug::dump($acl);
         // die;
-            // $navigation->setAcl($acl);
+        // $navigation->setAcl($acl);
 
 
 
         $this->getServiceLocator()->setAllowOverride(true);
         $this->getServiceLocator()->setService('Zend\Permissions\Acl', $acl);
+        // $this->getServiceLocator()->setService('Acl', $acl);
         $this->getServiceLocator()->setAllowOverride(false);
         \Zend\View\Helper\Navigation\AbstractHelper::setDefaultAcl($acl);
-        \Zend\View\Helper\Navigation\AbstractHelper::setDefaultRole($roleName);
+        \Zend\View\Helper\Navigation\AbstractHelper::setDefaultRole($roleNameUser);
         return $acl;
     }
 
